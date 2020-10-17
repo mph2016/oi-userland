@@ -20,24 +20,25 @@
 #
 # Copyright (c) 2011, 2013, Oracle and/or its affiliates. All rights reserved.
 # Copyright (c) 2019, Michal Nowak
+# Copyright (c) 2020, Andreas Wacknitz
 #
+
+BUILD_BITS=			32
 
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		emacs
-COMPONENT_VERSION=	26.2
+COMPONENT_VERSION=	27.1
 COMPONENT_PROJECT_URL=	https://www.gnu.org/software/emacs/
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.xz
 COMPONENT_ARCHIVE_HASH=	\
-	sha256:151ce69dbe5b809d4492ffae4a4b153b2778459de6deb26f35691e1281a9c58e
+	sha256:4a4c128f915fc937d61edfc273c98106711b540c9be3cd5d2e2b9b5b2f172e41
 COMPONENT_ARCHIVE_URL=	http://ftp.gnu.org/gnu/emacs/$(COMPONENT_ARCHIVE)
-COMPONENT_BUGDB=	utility/emacs
-COMPONENT_SIG_URL=	$(COMPONENT_ARCHIVE_URL).sig
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET=		$(NO_TESTS)
+
+include $(WS_MAKE_RULES)/common.mk
 
 # we build three different variants of emacs for our users. As Solaris
 # always has a 64-bit kernel, and 64-bit emacs can handle larger files,
@@ -47,15 +48,6 @@ VARIANTS =	nox x gtk
 BUILD_32 = $(VARIANTS:%=$(BUILD_DIR)/$(MACH32)-%/.built)
 INSTALL_32 = $(VARIANTS:%=$(BUILD_DIR)/$(MACH32)-%/.installed)
 
-# Force use of gnutls-3 pkgconfig during 2.x->3.x transition
-GNUTLS_PKG_CONFIG_PATH_32 = /usr/lib/pkgconfig/gnutls-3
-GNUTLS_PKG_CONFIG_PATH_64 = /usr/lib/$(MACH64)/pkgconfig/gnutls-3
-PKG_CONFIG_PATH = $(GNUTLS_PKG_CONFIG_PATH_$(BITS)):$(PKG_CONFIG_PATH.$(BITS))
-
-LD_OPTIONS.32 += -L/usr/lib/gnutls-3 -R/usr/lib/gnutls-3
-LD_OPTIONS.64 += -L/usr/lib/$(MACH64)/gnutls-3 -R/usr/lib/$(MACH64)/gnutls-3
-LD_OPTIONS += $(LD_OPTIONS.$(BITS))
-
 # build with the distribution preferred libjpeg implementation
 CFLAGS   += $(JPEG_CPPFLAGS) $(JPEG_CFLAGS)
 CXXFLAGS += $(JPEG_CPPFLAGS) $(JPEG_CXXFLAGS)
@@ -63,17 +55,8 @@ LDFLAGS  += $(JPEG_LDFLAGS)
 
 CFLAGS	+= $(shell pkg-config --cflags lcms2)
 
-# emacs creates a directory in usr/lib/emacs/$(COMPONENT_VERSION) that
-# contains the platform name. Although the name is platform dependent,
-# the files inside it are the same on all platforms. By adding this
-# to the pkgmogrify macros, we can write our manifests in a portable way.
-EMACS_ULEV_PFX = $(MACH:sparc=sparc-sun)
-EMACS_ULEVDIR =	 $(EMACS_ULEV_PFX:i386=i386-pc)-solaris$(SOLARIS_VERSION)
-PKG_MACROS +=	EMACS_ULEVDIR=$(EMACS_ULEVDIR)
-
 # LD_OPTIONS is defined to apply desirable link-editor options to Userland
 # components. Non-executable stack and data break sparc emacs.
-#
 LD_MAP_NOEXSTK.sparc=
 LD_MAP_NOEXDATA.sparc=
 
@@ -99,11 +82,15 @@ CONFIGURE_OPTIONS +=	--infodir=$(CONFIGURE_INFODIR)
 CONFIGURE_OPTIONS +=	--datarootdir=$(CONFIGURE_PREFIX)/share
 CONFIGURE_OPTIONS +=	--libexecdir=$(CONFIGURE_PREFIX)/lib
 CONFIGURE_OPTIONS +=	--with-gif=no
+# Disable imagemagick (fixes https://www.illumos.org/issues/10354)
+CONFIGURE_OPTIONS +=	--without-imagemagick
 CONFIGURE_OPTIONS +=	ac_cv_sys_long_file_names=yes
 
 # ASLR should remain disabled for emacs (the default);
 # build consistently core dumps with ASLR
 ASLR_MODE = $(ASLR_DISABLE)
+# LD_EXEC_OPTIONS is not supported on illumos, we need to disable ASLR in LD_OPTIONS
+LD_OPTIONS+= $(ASLR_MODE)
 
 # variant specific configure options
 $(BUILD_DIR)/%-nox/.configured: CONFIGURE_OPTIONS +=	--without-all --without-x
@@ -121,6 +108,7 @@ $(BUILD_DIR)/%-gtk/.configured:  CONFIGURE_OPTIONS +=	--with-x-toolkit=gtk3
 # facilitates the use of 'gmake sample-manifest'.
 PBIN=		$(PROTO_DIR)/usr/bin
 PETC=		$(PROTO_DIR)/usr/share/emacs/$(COMPONENT_VERSION)/etc
+PPDMP=		$(PROTO_DIR)/usr/lib/emacs/$(COMPONENT_VERSION)/$(GNU_TRIPLET)
 PGBIN=		$(PROTO_DIR)/usr/gnu/bin
 PGSHAREMAN1=	$(PROTO_DIR)/usr/gnu/share/man/man1
 PSHAREMAN1=	$(PROTO_DIR)/usr/share/man/man1
@@ -135,6 +123,10 @@ COMPONENT_POST_INSTALL_ACTION += \
 		$(PBIN)/emacs-gtk ;
 COMPONENT_POST_INSTALL_ACTION += \
 	$(LN) $(PBIN)/emacs-gtk $(PBIN)/emacs-gtk-$(COMPONENT_VERSION) ;
+# Each emacs variant needs its own dump file:
+COMPONENT_POST_INSTALL_ACTION += \
+	$(CP) $(BUILD_DIR)/$(MACH32)-gtk/src/emacs.pdmp \
+		$(PPDMP)/emacs-gtk.pdmp ;
 
 # Non-X11 binaries
 COMPONENT_POST_INSTALL_ACTION += \
@@ -142,6 +134,10 @@ COMPONENT_POST_INSTALL_ACTION += \
 		$(PBIN)/emacs-nox ;
 COMPONENT_POST_INSTALL_ACTION += \
 	$(LN) $(PBIN)/emacs-nox $(PBIN)/emacs-nox-$(COMPONENT_VERSION) ;
+# Each emacs variant needs its own dump file:
+COMPONENT_POST_INSTALL_ACTION += \
+	$(CP) $(BUILD_DIR)/$(MACH32)-nox/src/emacs.pdmp \
+		$(PPDMP)/emacs-nox.pdmp ;
 
 # X11 (Athena) binaries
 COMPONENT_POST_INSTALL_ACTION += \
@@ -149,6 +145,10 @@ COMPONENT_POST_INSTALL_ACTION += \
 		$(PBIN)/emacs-x ;
 COMPONENT_POST_INSTALL_ACTION += \
 	$(LN) $(PBIN)/emacs-x $(PBIN)/emacs-x-$(COMPONENT_VERSION) ;
+# Each emacs variant needs its own dump file:
+COMPONENT_POST_INSTALL_ACTION += \
+	$(CP) $(BUILD_DIR)/$(MACH32)-x/src/emacs.pdmp \
+		$(PPDMP)/emacs-x.pdmp ;
 
 # Emacs shell script that picks the right variant at runtime
 COMPONENT_POST_INSTALL_ACTION += $(CP) augment/emacs $(PBIN) ;
@@ -198,31 +198,28 @@ COMPONENT_POST_INSTALL_ACTION += $(GUNZIP) \
 # Solaris, it is delivered by system/prerequisite/gnu.
 COMPONENT_POST_INSTALL_ACTION += $(RM) $(PROTO_DIR)/usr/share/info/dir ;
 
-# common targets
-build:          $(BUILD_32)
-
 install:	$(BUILD_32) $(BUILD_DIR)/$(MACH32)-x/.installed
 
-test:		$(NO_TESTS)
-
 # Auto-generated dependencies
+REQUIRED_PACKAGES += SUNWcs
+#REQUIRED_PACKAGES += editor/gnu-emacs
 REQUIRED_PACKAGES += file/gnu-findutils
-REQUIRED_PACKAGES += image/imagemagick
 REQUIRED_PACKAGES += image/library/libjpeg8-turbo
 REQUIRED_PACKAGES += image/library/libpng16
 REQUIRED_PACKAGES += image/library/librsvg
 REQUIRED_PACKAGES += image/library/libtiff
+REQUIRED_PACKAGES += library/c++/harfbuzz
 REQUIRED_PACKAGES += library/desktop/cairo
 REQUIRED_PACKAGES += library/desktop/gdk-pixbuf
 REQUIRED_PACKAGES += library/desktop/gtk3
 REQUIRED_PACKAGES += library/desktop/pango
 REQUIRED_PACKAGES += library/glib2
 REQUIRED_PACKAGES += library/gnutls-3
+REQUIRED_PACKAGES += library/jansson
 REQUIRED_PACKAGES += library/lcms2
 REQUIRED_PACKAGES += library/libxml2
 REQUIRED_PACKAGES += library/ncurses
 REQUIRED_PACKAGES += library/zlib
-REQUIRED_PACKAGES += SUNWcs
 REQUIRED_PACKAGES += system/library
 REQUIRED_PACKAGES += system/library/fontconfig
 REQUIRED_PACKAGES += system/library/freetype-2

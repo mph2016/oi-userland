@@ -11,6 +11,7 @@
 
 #
 # Copyright 2014-2015 Aurelien Larcher
+# Copyright 2020, Michal Nowak
 #
 
 set name=pkg.fmri value=pkg:/$(COMPONENT_FMRI)@$(IPS_COMPONENT_VERSION),$(BUILD_VERSION)
@@ -60,5 +61,6 @@ file path=usr/share/doc/check/example/tests/check_money.3.c
 file path=usr/share/doc/check/example/tests/check_money.6.c
 file path=usr/share/doc/check/example/tests/check_money.7.c
 file path=usr/share/doc/check/example/tests/check_money.c
-file path=usr/share/info/check.info
+#file path=usr/share/info/check.info
+#file path=usr/share/info/dir
 file path=usr/share/man/man1/checkmk.1

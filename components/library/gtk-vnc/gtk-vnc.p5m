@@ -60,9 +60,6 @@ file path=usr/lib/$(MACH64)/libgvncpulse-1.0.so.0.0.1
 file path=usr/lib/$(MACH64)/pkgconfig/gtk-vnc-2.0.pc
 file path=usr/lib/$(MACH64)/pkgconfig/gvnc-1.0.pc
 file path=usr/lib/$(MACH64)/pkgconfig/gvncpulse-1.0.pc
-file path=usr/lib/girepository-1.0/GVnc-1.0.typelib
-file path=usr/lib/girepository-1.0/GVncPulse-1.0.typelib
-file path=usr/lib/girepository-1.0/GtkVnc-2.0.typelib
 link path=usr/lib/libgtk-vnc-2.0.so target=libgtk-vnc-2.0.so.0.0.2
 link path=usr/lib/libgtk-vnc-2.0.so.0 target=libgtk-vnc-2.0.so.0.0.2
 file path=usr/lib/libgtk-vnc-2.0.so.0.0.2
@@ -95,6 +92,7 @@ file path=usr/share/locale/gd/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/gl/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/guc/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/he/LC_MESSAGES/gtk-vnc.mo
+file path=usr/share/locale/hr/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/hu/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/id/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/it/LC_MESSAGES/gtk-vnc.mo
@@ -104,6 +102,7 @@ file path=usr/share/locale/lt/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/lv/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/nb/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/nds/LC_MESSAGES/gtk-vnc.mo
+file path=usr/share/locale/nl/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/oc/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/pa/LC_MESSAGES/gtk-vnc.mo
 file path=usr/share/locale/pl/LC_MESSAGES/gtk-vnc.mo

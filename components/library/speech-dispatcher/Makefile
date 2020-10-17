@@ -13,10 +13,13 @@
 # Copyright 2017 Alexander Pyhalov
 #
 
+BUILD_BITS=64
+
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME= speech-dispatcher
 COMPONENT_VERSION= 0.8.7
+COMPONENT_REVISION= 3
 COMPONENT_SUMMARY= Speech Dispatcher
 COMPONENT_SRC= $(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE= $(COMPONENT_SRC).tar.gz
@@ -30,17 +33,18 @@ COMPONENT_CLASSIFICATION= Applications/Universal Access
 COMPONENT_LICENSE = GPLv2
 COMPONENT_LICENSE_FILE = COPYING
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET = $(NO_TESTS)
+include $(WS_MAKE_RULES)/common.mk
 
 PATH=$(PATH.gnu)
 
-PYTHON_VERSION = 3.4
+PYTHON_VERSION = 3.5
 
 LDFLAGS += -lnsl -lsocket
 
-CONFIGURE_BINDIR.64 = /usr/bin
+# The split-version.sh script is called from the builddir by configure.
+# Version numbers are silently missing without this.
+COMPONENT_PRE_CONFIGURE_ACTION = ($(CLONEY) $(SOURCE_DIR) $(@D))
 
 CONFIGURE_OPTIONS += --sysconfdir=$(ETCDIR)
 CONFIGURE_OPTIONS += --disable-static
@@ -48,15 +52,12 @@ CONFIGURE_OPTIONS += --with-espeak
 CONFIGURE_OPTIONS += --with-pulse
 
 # There are no binary python modules, install them in 32-bit path
-CONFIGURE_ENV+=    am_cv_python_pyexecdir=$(PYTHON_VENDOR_PACKAGES.32)
-CONFIGURE_ENV+=    am_cv_python_pythondir=$(PYTHON_VENDOR_PACKAGES.32)
+CONFIGURE_ENV+=    PYTHON=$(PYTHON)
+CONFIGURE_ENV+=    am_cv_python_pyexecdir=$(PYTHON_VENDOR_PACKAGES)
+CONFIGURE_ENV+=    am_cv_python_pythondir=$(PYTHON_VENDOR_PACKAGES)
 
-build: $(BUILD_64)
-
-install: $(INSTALL_64)
-
-test: $(NO_TESTS)
-
+# Auto-generated dependencies
+REQUIRED_PACKAGES += library/audio/libao
 REQUIRED_PACKAGES += library/audio/pulseaudio
 REQUIRED_PACKAGES += library/desktop/dotconf
 REQUIRED_PACKAGES += library/glib2

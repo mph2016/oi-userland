@@ -13,29 +13,31 @@
 # Copyright 2019 Michal Nowak
 #
 
-PREFERRED_BITS=		64
+BUILD_BITS=		64
 
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		pluma
-COMPONENT_MJR_VERSION=	1.22
+COMPONENT_MJR_VERSION=	1.24
 COMPONENT_MNR_VERSION=	1
 COMPONENT_VERSION=	$(COMPONENT_MJR_VERSION).$(COMPONENT_MNR_VERSION)
 COMPONENT_PROJECT_URL=	https://mate-desktop.org/
+COMPONENT_FMRI=         editor/pluma
 COMPONENT_SUMMARY=	MATE text editor
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.xz
 COMPONENT_ARCHIVE_HASH=	\
-	sha256:af8d19927f1571d6b63462b8e51fed9ac851326b6ff800535ea785f15c61a591
-COMPONENT_ARCHIVE_URL=	http://pub.mate-desktop.org/releases/$(COMPONENT_MJR_VERSION)/$(COMPONENT_ARCHIVE)
+	sha256:2e251113afa1af63fb98f28f2b49aea874c5f654a33da3ad12994580882bece9
+COMPONENT_ARCHIVE_URL=	https://pub.mate-desktop.org/releases/$(COMPONENT_MJR_VERSION)/$(COMPONENT_ARCHIVE)
 COMPONENT_CLASSIFICATION=	Applications/Accessories
 COMPONENT_LICENSE=      GPLv2
 COMPONENT_LICENSE_FILE= COPYING
-COMPONENT_FMRI=         editor/pluma
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+PYTHON_VERSION = 3.5
+
+include $(WS_MAKE_RULES)/common.mk
+
+TEST_TARGET=		$(NO_TESTS)
 
 PATH=$(PATH.gnu)
 
@@ -47,20 +49,17 @@ CONFIGURE_OPTIONS+=	--sysconfdir=/etc
 CONFIGURE_OPTIONS+=	--libexecdir=$(CONFIGURE_LIBDIR.$(BITS))
 CONFIGURE_OPTIONS+=	--disable-static
 
+CONFIGURE_ENV+=		PYTHON=$(PYTHON)
+
 COMPONENT_BUILD_ENV+=	CC="$(CC)"
 COMPONENT_BUILD_ENV+=	CFLAGS="$(CFLAGS)"
 
 COMPONENT_INSTALL_ENV+= GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 
-build:		$(BUILD_64)
-
-install:	$(INSTALL_64)
-
-test:		$(NO_TESTS)
-
 # Build dependencies
 REQUIRED_PACKAGES += data/iso-codes
 REQUIRED_PACKAGES += developer/documentation-tool/gtk-doc
+REQUIRED_PACKAGES += runtime/python-35
 
 # Auto-generated dependencies
 REQUIRED_PACKAGES += library/desktop/atk

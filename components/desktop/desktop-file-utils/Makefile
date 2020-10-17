@@ -10,34 +10,32 @@
 
 #
 # Copyright (c) 2014 Alexander Pyhalov. All rights reserved
+# Copyright (c) 2019 Michal Nowak
+# Copyright (c) 2020 Andreas Wacknitz
 #
 
+BUILD_BITS=			64
+BUILD_STYLE=		meson
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		desktop-file-utils
-COMPONENT_VERSION=	0.23
-COMPONENT_PROJECT_URL=	http://www.freedesktop.org/wiki/Software/desktop-file-utils/
+COMPONENT_VERSION=	0.26
+COMPONENT_PROJECT_URL=	https://www.freedesktop.org/wiki/Software/desktop-file-utils/
 COMPONENT_SUMMARY=	A few command line utilities for working with desktop entries
+COMPONENT_FMRI=		library/desktop/desktop-file-utils
+COMPONENT_CLASSIFICATION= Desktop (GNOME)/Scripts
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.xz
 COMPONENT_ARCHIVE_HASH=	\
-  sha256:6c094031bdec46c9f621708f919084e1cb5294e2c5b1e4c883b3e70cb8903385
-COMPONENT_ARCHIVE_URL=	http://www.freedesktop.org/software/desktop-file-utils/releases/$(COMPONENT_ARCHIVE)
+	sha256:b26dbde79ea72c8c84fb7f9d870ffd857381d049a86d25e0038c4cef4c747309
+COMPONENT_ARCHIVE_URL=	https://www.freedesktop.org/software/desktop-file-utils/releases/$(COMPONENT_ARCHIVE)
 COMPONENT_LICENSE_FILE= COPYING
 COMPONENT_LICENSE=	GPLv2
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET=		$(NO_TESTS)
+include $(WS_MAKE_RULES)/common.mk
 
 PATH=$(PATH.gnu)
-
-# common targets
-build:		$(BUILD_32)
-
-install:	$(INSTALL_32)
-
-test:		$(NO_TESTS)
 
 # Auto-generated dependencies
 REQUIRED_PACKAGES += library/glib2

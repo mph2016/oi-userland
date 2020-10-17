@@ -23,7 +23,11 @@ set name=org.opensolaris.consolidation value=$(CONSOLIDATION)
 
 license $(COMPONENT_LICENSE_FILE) license='$(COMPONENT_LICENSE)'
 
-<transform file path=usr/lib/.*/loaders/.* ->  default restart_fmri svc:/application/desktop-cache/pixbuf-loaders-installer:default>
+<transform file path=usr/lib/.*/loaders/.* ->  default refresh_fmri svc:/application/desktop-cache/pixbuf-loaders-installer:default>
+
+# This hack allows us to run pixbuf-loaders refresh on each package republish despite file changes.
+# See https://www.illumos.org/issues/12329 for details.
+<transform set name=userland.info.git-rev ->  default refresh_fmri svc:/application/desktop-cache/pixbuf-loaders-installer:default>
 
 depend type=require fmri=pkg:/service/gnome/desktop-cache@0.2.2,5.11-2014.0.1.0
 
@@ -44,7 +48,6 @@ link path=usr/lib/$(MACH64)/librsvg-2.so.2 \
     target=librsvg-2.so.$(COMPONENT_VERSION)
 file path=usr/lib/$(MACH64)/pkgconfig/librsvg-2.0.pc
 file path=usr/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.so
-file path=usr/lib/girepository-1.0/Rsvg-2.0.typelib
 link path=usr/lib/librsvg-2.so target=librsvg-2.so.$(COMPONENT_VERSION)
 file path=usr/lib/librsvg-2.so.$(COMPONENT_VERSION)
 link path=usr/lib/librsvg-2.so.2 target=librsvg-2.so.$(COMPONENT_VERSION)
@@ -52,14 +55,6 @@ file path=usr/lib/pkgconfig/librsvg-2.0.pc
 file path=usr/share/gir-1.0/Rsvg-2.0.gir
 file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/RsvgHandle.html
 file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/annotation-glossary.html
-file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/api-index-2-14.html
-file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/api-index-2-22.html
-file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/api-index-2-32.html
-file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/api-index-2-36.html
-file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/api-index-2-4.html
-file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/api-index-2-8.html
-file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/api-index-2-9.html
-file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/api-index-deprecated.html
 file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/api-index-full.html
 file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/home.png
 file path=usr/share/gtk-doc/html/librsvg/rsvg-2.0/index.html

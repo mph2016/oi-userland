@@ -19,6 +19,7 @@
 # CDDL HEADER END
 #
 # Copyright (c) 2011, 2013, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2020, Michal Nowak
 #
 
 <transform file path=usr/share/doc/bind/html/(.+)$ -> \
@@ -37,9 +38,9 @@ set name=info.classification \
     value="org.opensolaris.category.2008:System/Services"
 set name=info.upstream-url value=$(COMPONENT_PROJECT_URL)
 set name=info.source-url value=$(COMPONENT_ARCHIVE_URL)
-set name=org.opensolaris.arc-caseid \
-	value=PSARC/2009/308
 set name=org.opensolaris.consolidation value=$(CONSOLIDATION)
+
+license $(COMPONENT_LICENSE_FILE) license='$(COMPONENT_LICENSE)'
 
 # This package name has known conflicts with other packages in the WOS
 set pkg.linted.pkglint.manifest004=true
@@ -49,33 +50,6 @@ set pkg.linted.pkglint.manifest004=true
 file Solaris/server.xml path=lib/svc/manifest/network/dns/server.xml
 file Solaris/dns-server.sh path=lib/svc/method/dns-server mode=0555
 file Solaris/migration.txt path=usr/share/doc/bind/migration.txt
-
-# Documentation
-file doc/arm/Bv9ARM.pdf path=usr/share/doc/bind/Bv9ARM.pdf
-file path=usr/share/doc/bind/html/Bv9ARM.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch01.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch02.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch03.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch04.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch05.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch06.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch07.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch08.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch09.html
-file path=usr/share/doc/bind/html/Bv9ARM.ch10.html
-file path=usr/share/doc/bind/html/man.dig.html
-file path=usr/share/doc/bind/html/man.dnssec-dsfromkey.html
-file path=usr/share/doc/bind/html/man.dnssec-keyfromlabel.html
-file path=usr/share/doc/bind/html/man.dnssec-keygen.html
-file path=usr/share/doc/bind/html/man.dnssec-signzone.html
-file path=usr/share/doc/bind/html/man.host.html
-file path=usr/share/doc/bind/html/man.named-checkconf.html
-file path=usr/share/doc/bind/html/man.named-checkzone.html
-file path=usr/share/doc/bind/html/man.named.html
-file path=usr/share/doc/bind/html/man.nsupdate.html
-file path=usr/share/doc/bind/html/man.rndc-confgen.html
-file path=usr/share/doc/bind/html/man.rndc.conf.html
-file path=usr/share/doc/bind/html/man.rndc.html
 
 # Libs
 file path=usr/lib/dns/$(MACH64)/named/filter-aaaa.so
@@ -120,16 +94,6 @@ file usr/share/man/man8/named-checkzone.8 path=usr/share/man/man1m/named-checkzo
 file usr/share/man/man8/named-journalprint.8 path=usr/share/man/man1m/named-journalprint.1m
 file usr/share/man/man1/named-rrchecker.1 path=usr/share/man/man1m/named-rrchecker.1m
 file usr/share/man/man8/named.8 path=usr/share/man/man1m/named.1m
-
-legacy pkg=SUNWbind \
-       name="BIND DNS Name server" \
-       desc="BIND DNS Name server"
-
-legacy pkg=SUNWbindr \
-       name="BIND Name server Manifest" \
-       desc="BIND Name server Manifest"
-
-license bind.license license="ISC license"
 
 group groupname=named gid=53
 user username=named ftpuser=false gcos-field="BIND Reserved UID" group=named \

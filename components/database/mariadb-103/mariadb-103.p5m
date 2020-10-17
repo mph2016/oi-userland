@@ -48,12 +48,12 @@ depend fmri=database/mysql-common type=require
 depend fmri=database/mariadb-103/client@$(IPS_COMPONENT_VERSION),$(BUILD_VERSION) type=require
 
 file path=usr/mariadb/10.3/COPYING
-file path=usr/mariadb/10.3/COPYING.thirdparty
 file path=usr/mariadb/10.3/CREDITS
 file path=usr/mariadb/10.3/EXCEPTIONS-CLIENT
 file path=usr/mariadb/10.3/INSTALL-BINARY
 file path=usr/mariadb/10.3/README-wsrep
 file path=usr/mariadb/10.3/README.md
+file path=usr/mariadb/10.3/THIRDPARTY
 
 file path=usr/mariadb/10.3/bin/aria_chk
 file path=usr/mariadb/10.3/bin/aria_dump_log
@@ -166,7 +166,6 @@ file path=usr/mariadb/10.3/man/man1/perror.1
 file path=usr/mariadb/10.3/man/man1/replace.1
 file path=usr/mariadb/10.3/man/man1/resolve_stack_dump.1
 file path=usr/mariadb/10.3/man/man1/resolveip.1
-file path=usr/mariadb/10.3/man/man1/tokuftdump.1
 file path=usr/mariadb/10.3/man/man1/wsrep_sst_common.1
 file path=usr/mariadb/10.3/man/man1/wsrep_sst_mysqldump.1
 file path=usr/mariadb/10.3/man/man1/wsrep_sst_rsync.1

@@ -14,25 +14,24 @@
 # Copyright 2019, Michal Nowak
 #
 
+BUILD_BITS= 32_and_64
 PREFERRED_BITS=		64
+BUILD_STYLE=cmake
 
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		mariadb
 COMPONENT_MAJOR_VERSION=10.3
-COMPONENT_MINOR_VERSION=14
+COMPONENT_MINOR_VERSION=24
 COMPONENT_VERSION=	$(COMPONENT_MAJOR_VERSION).$(COMPONENT_MINOR_VERSION)
-COMPONENT_REVISION=	1
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.gz
 COMPONENT_PROJECT_URL=	https://www.mariadb.org/
-COMPONENT_ARCHIVE_HASH=	sha256:ba1c94d92fc8ebdf9b8a1d1b93ed6aeeead33da507efbbd4afcf49f32023e054
+COMPONENT_ARCHIVE_HASH=	sha256:713cfbe78475bf152d711280096756bd12cce3ba01a1130027da4901598a9a4e
 COMPONENT_ARCHIVE_URL=	https://downloads.mariadb.com/MariaDB/$(COMPONENT_SRC)/source/$(COMPONENT_ARCHIVE)
 COMPONENT_SIG_URL=	$(COMPONENT_ARCHIVE_URL).asc
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/cmake.mk
-include $(WS_MAKE_RULES)/ips.mk
+include $(WS_MAKE_RULES)/common.mk
 
 CPPFLAGS += -I/usr/include/pcre
 # Prevents "Text relocation remains referenced against symbol offset
@@ -84,6 +83,9 @@ CMAKE_OPTIONS+= -DWITH_COMMENT="OpenIndiana MariaDB"
 CMAKE_OPTIONS+= -DWITH_XTRADB_STORAGE_ENGINE=1
 CMAKE_OPTIONS+= -DWITH_CSV_STORAGE_ENGINE=1
 CMAKE_OPTIONS+= -DCOMPILATION_COMMENT="OpenIndiana package"
+CMAKE_OPTIONS+= -DJAVA_INCLUDE_PATH=/usr/jdk/latest/include
+CMAKE_OPTIONS+= -DJAVA_AWT_LIBRARY=/usr/java/jre/lib/amd64/libjawt.so
+CMAKE_OPTIONS+= -DJAVA_JVM_LIBRARY=/usr/java/jre/lib/amd64/server/libjvm.so
 
 CMAKE_ENV += CPPFLAGS="$(CPPFLAGS)"
 
@@ -107,12 +109,6 @@ COMPONENT_TEST_CMD=	mysql-test/mtr \
 				--force-restart \
 				--max-test-fail=0 \
 				--skip-test-list=unstable-tests | sort
-
-build:		$(BUILD_32_and_64)
-
-install:	$(INSTALL_32_and_64)
-
-test:		$(TEST_32_and_64)
 
 # Auto-generated dependencies
 REQUIRED_PACKAGES += $(GCC_RUNTIME_PKG)

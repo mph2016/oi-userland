@@ -2,10 +2,16 @@
 /i386
 /sparc
 
+/components/mapping.json
+/components/dependencies.json
+
 components/*.mk
 components/**/build
 
 tools/python/pkglint/*.pyc
+tools/python/pkglint/__pycache__
 tools/parfait
 tools/pkglint
 tools/time-*o
+
+.vagrant

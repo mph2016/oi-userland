@@ -10,7 +10,7 @@
 #
 
 #
-# Copyright 2016-2018 Jim Klimov
+# Copyright 2016-2020 Jim Klimov
 #
 include ../../../make-rules/shared-macros.mk
 
@@ -24,29 +24,29 @@ include ../../../make-rules/shared-macros.mk
 # Note that for LTS it would make sense to define indexed "additional
 # source" variables below, see e.g. docbook for inspiration.
 
-COMPONENT_NAME=		jenkins
-JENKINS_RELEASE=lts
+COMPONENT_NAME=				jenkins
+JENKINS_RELEASE=			lts
 COMPONENT_MAJOR_VERSION=	2
-COMPONENT_MINOR_VERSION=	150
-COMPONENT_PATCH_VERSION=	1
+COMPONENT_MINOR_VERSION=	249
+COMPONENT_PATCH_VERSION=	2
 COMPONENT_ARCHIVE_HASH=	\
-	sha256:7a38586d5a3a1a83498809a83715728bb2f01b58a7dd3a88366f076efdaf6669
+	sha256:1bb06cc42cef730e6326faba146f6c40e77df381ec4b281287f6993423f9a522
 # See $(COMPONENT_ARCHIVE_URL).sha256 e.g. for current weekly release, run
 #   wget -O - http://mirrors.jenkins-ci.org/war/latest/jenkins.war.sha256
 # or for LTS
 #   wget -O - http://mirrors.jenkins.io/war-stable/latest/jenkins.war.sha256
 
-COMPONENT_VERSION=	$(COMPONENT_MAJOR_VERSION).$(COMPONENT_MINOR_VERSION).$(COMPONENT_PATCH_VERSION)
-COMPONENT_ARCHIVE=	$(COMPONENT_NAME)-$(JENKINS_RELEASE)-$(COMPONENT_VERSION).war
-COMPONENT_FMRI=		developer/jenkins-core-$(JENKINS_RELEASE)
+COMPONENT_VERSION=			$(COMPONENT_MAJOR_VERSION).$(COMPONENT_MINOR_VERSION).$(COMPONENT_PATCH_VERSION)
+COMPONENT_ARCHIVE=			$(COMPONENT_NAME)-$(JENKINS_RELEASE)-$(COMPONENT_VERSION).war
+COMPONENT_FMRI=				developer/jenkins-core-$(JENKINS_RELEASE)
 COMPONENT_CLASSIFICATION=	Development/Java
-COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
-COMPONENT_PROJECT_URL=	https://jenkins.io/changelog/
+COMPONENT_SRC=				$(COMPONENT_NAME)-$(COMPONENT_VERSION)
+COMPONENT_PROJECT_URL=		https://jenkins.io/changelog/
 COMPONENT_ARCHIVE_URL=\
 	http://mirrors.jenkins-ci.org/war-stable/$(COMPONENT_VERSION)/jenkins.war
-COMPONENT_LICENSE=		MIT
-COMPONENT_LICENSE_FILE= jenkins.license
-COMPONENT_SUMMARY=	Jenkins is a Java-based CI automation server
+COMPONENT_LICENSE=			MIT
+COMPONENT_LICENSE_FILE= 	jenkins.license
+COMPONENT_SUMMARY=			Jenkins is a Java-based CI automation server
 
 # Note: for the core, we only download a WAR - no unpacking, no building...
 include $(WS_MAKE_RULES)/prep-download.mk

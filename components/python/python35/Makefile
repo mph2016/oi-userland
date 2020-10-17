@@ -24,25 +24,27 @@
 # Copyright (c) 2019, Michal Nowak
 #
 
-PREFERRED_BITS=	64
+BUILD_BITS=	64
 
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		Python
-COMPONENT_VERSION=	3.5.7
+COMPONENT_VERSION=	3.5.10
 COMPONENT_PROJECT_URL=	https://www.python.org
+COMPONENT_SUMMARY=	The Python interpreter, libraries and utilities
+COMPONENT_CLASSIFICATION= Development/Python
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.xz
 COMPONENT_ARCHIVE_HASH=	\
-	sha256:285892899bf4d5737fd08482aa6171c6b2564a45b9102dfacfb72826aebdc7dc
+	sha256:0f0fa8685c1dc1f1dacb0b4e7779796b90aef99dc1fa4967a71b9da7b57d4a28
 COMPONENT_ARCHIVE_URL=	$(COMPONENT_PROJECT_URL)/ftp/python/$(COMPONENT_VERSION)/$(COMPONENT_ARCHIVE)
-COMPONENT_SIG_URL=	$(COMPONENT_ARCHIVE_URL).asc
+COMPONENT_LICENSE=	PSFv2
 
 CONFIGURE_FIX_LIBTOOL_RPATH = no
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET=		$(TEST_64)
+
+include $(WS_MAKE_RULES)/common.mk
 
 # Need to preserve timestamp for Grammar files.  If the pickle files are older,
 # Python will try to rebuild them.
@@ -93,6 +95,8 @@ CONFIGURE_OPTIONS  +=		--with-system-ffi
 CONFIGURE_OPTIONS  +=		--without-gcc
 CONFIGURE_OPTIONS  +=		--without-ensurepip
 CONFIGURE_OPTIONS  +=		--enable-ipv6
+CONFIGURE_OPTIONS  +=		--with-c-locale-coercion
+CONFIGURE_OPTIONS  +=		--without-c-locale-warning
 CONFIGURE_OPTIONS  +=		--bindir=$(USRBINDIR)
 # https://bugs.python.org/issue25003
 # CONFIGURE_OPTIONS  +=		"ac_cv_func_getentropy=no"
@@ -112,10 +116,6 @@ COMPONENT_BUILD_ARGS =
 
 # 64-bit shared objects need to go to 64-bit directory
 COMPONENT_INSTALL_ARGS += DESTSHARED=$(CONFIGURE_PREFIX)/lib/python3.5/lib-dynload
-
-build:		$(BUILD_64)
-
-install:	$(INSTALL_64)
 
 # Using "-uall,-network" ensures all tests are run except the network tests.
 # The network tests contain many expected failures when run behind a firewall.
@@ -137,10 +137,10 @@ COMPONENT_TEST_TARGETS = test < /dev/null
 COMPONENT_TEST_TRANSFORMER =	$(NAWK)
 COMPONENT_TEST_TRANSFORMS = "'/tests OK/ { results = 1 }; /^Re-running failed tests in verbose mode/ { results = 0 } { if (results) print }'"
 
-test:		$(TEST_64)
-
 # Required for dump(1)
 REQUIRED_PACKAGES += developer/object-file
+# Required to build ossaudiodev module
+REQUIRED_PACKAGES += system/header/header-audio
 # Auto-generated dependencies
 REQUIRED_PACKAGES += compress/bzip2
 REQUIRED_PACKAGES += compress/xz

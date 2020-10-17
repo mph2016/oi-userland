@@ -13,35 +13,30 @@
 # Copyright 2019 Michal Nowak
 #
 
+BUILD_BITS=		32_and_64
+
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		libmicrohttpd
-COMPONENT_VERSION=	0.9.63
-COMPONENT_PROJECT_URL=	http://www.gnu.org/software/libmicrohttpd/
+COMPONENT_VERSION=	0.9.71
+COMPONENT_PROJECT_URL=	https://www.gnu.org/software/libmicrohttpd/
 COMPONENT_FMRI=		library/libmicrohttpd
+COMPONENT_SUMMARY=	GNU libmicrohttpd is a small HTTP server as a C library
+COMPONENT_CLASSIFICATION=System/Libraries
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.gz
 COMPONENT_ARCHIVE_HASH=	\
-	sha256:37c36f1be177f0e37ef181a645cd3baac1000bd322a01c2eff70f3cc8c91749c
+	sha256:e8f445e85faf727b89e9f9590daea4473ae00ead38b237cf1eda55172b89b182
 COMPONENT_ARCHIVE_URL=	http://ftp.gnu.org/gnu/$(COMPONENT_NAME)/$(COMPONENT_ARCHIVE)
 COMPONENT_SIG_URL=	http://ftp.gnu.org/gnu/$(COMPONENT_NAME)/$(COMPONENT_ARCHIVE).sig
 COMPONENT_LICENSE=	LGPL2.1+
 COMPONENT_LICENSE_FILE=	$(COMPONENT_NAME).license
-COMPONENT_SUMMARY=	GNU libmicrohttpd is a small HTTP server as a C library
-COMPONENT_CLASSIFICATION=System/Libraries
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+# Tests work properly only for curl with GnuTLS SSL backend (we use OpenSSL only),
+# see https://gnunet.org/bugs/view.php?id=5564.
+TEST_TARGET=		$(TEST_32_and_64)
 
-# Force use of gnutls-3 pkgconfig during 2.x->3.x transition
-GNUTLS_PKG_CONFIG_PATH_32 = /usr/lib/pkgconfig/gnutls-3
-GNUTLS_PKG_CONFIG_PATH_64 = /usr/lib/$(MACH64)/pkgconfig/gnutls-3
-PKG_CONFIG_PATH = $(GNUTLS_PKG_CONFIG_PATH_$(BITS)):$(PKG_CONFIG_PATH.$(BITS))
-
-LD_OPTIONS.32 += -L/usr/lib/gnutls-3 -R/usr/lib/gnutls-3
-LD_OPTIONS.64 += -L/usr/lib/$(MACH64)/gnutls-3 -R/usr/lib/$(MACH64)/gnutls-3
-LD_OPTIONS += $(LD_OPTIONS.$(BITS))
+include $(WS_MAKE_RULES)/common.mk
 
 COMPONENT_PREP_ACTION += (cd $(@D) && autoreconf -fi)
 
@@ -59,14 +54,6 @@ CONFIGURE_OPTIONS += --disable-static
 unexport SHELLOPTS
 
 COMPONENT_TEST_ENV += LD_OPTIONS="$(LD_OPTIONS)"
-
-build:		$(BUILD_32_and_64)
-
-install:	$(INSTALL_32_and_64)
-
-# Tests work properly only for curl with GnuTLS SSL backend (we use OpenSSL only),
-# see https://gnunet.org/bugs/view.php?id=5564.
-test:		$(TEST_32_and_64)
 
 REQUIRED_PACKAGES += system/library/security/libgcrypt
 # Auto-generated dependencies

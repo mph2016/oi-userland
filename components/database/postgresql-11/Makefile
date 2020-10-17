@@ -14,21 +14,21 @@
 # Copyright 2019 Michal Nowak
 #
 
+BUILD_BITS=32_and_64
+
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=			postgresql
 COMPONENT_MJR_VERSION=	11
-COMPONENT_MNR_VERSION=	3
+COMPONENT_MNR_VERSION=	9
 COMPONENT_VERSION=		$(COMPONENT_MJR_VERSION).$(COMPONENT_MNR_VERSION)
 COMPONENT_SRC=			$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=		$(COMPONENT_SRC).tar.bz2
-COMPONENT_ARCHIVE_HASH=	sha256:2a85e082fc225944821dfd23990e32dfcd2284c19060864b0ad4ca537d30522d
+COMPONENT_ARCHIVE_HASH=	sha256:35618aa72e0372091f923c42389c6febd07513157b4fbb9408371706afbb6635
 COMPONENT_ARCHIVE_URL=	http://ftp.postgresql.org/pub/source/v$(COMPONENT_VERSION)/$(COMPONENT_ARCHIVE)
 COMPONENT_PROJECT_URL=	https://www.postgresql.org
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+include $(WS_MAKE_RULES)/common.mk
 
 # Missing files in build dir for configure without this.
 COMPONENT_PRE_CONFIGURE_ACTION =        ($(CLONEY) $(SOURCE_DIR) $(@D))
@@ -101,13 +101,6 @@ COMPONENT_TEST_TRANSFORMS= \
 	'-e "/ok/p"' \
 	'-e "/FAIL/p"' \
 	'-e "/failed/p"'
-
-
-build:		$(BUILD_32_and_64)
-
-install:	$(INSTALL_32_and_64)
-
-test:		$(TEST_64)
 
 REQUIRED_PACKAGES += SUNWcs
 REQUIRED_PACKAGES += library/libedit

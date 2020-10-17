@@ -13,27 +13,27 @@
 # Copyright (c) 2018 Michal Nowak
 #
 
-PREFERRED_BITS=	64
+BUILD_BITS=	64
 
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		compiz
-COMPONENT_VERSION=	0.8.14
+COMPONENT_VERSION=	0.8.18
 COMPONENT_FMRI=		desktop/compiz
 COMPONENT_PROJECT_URL=	http://www.northfield.ws/
 COMPONENT_SUMMARY=	OpenGL compositing window manager
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_NAME)-$(COMPONENT_VERSION).tar.xz
 COMPONENT_ARCHIVE_HASH=	\
-    sha256:f748b3a3c5a746d509925af72fd0cae6b69f880944ea6c1fa6e2eaf9425459b6
+	sha256:b72744cc1ecef8bfa55d5994c7409e5178e34250b0f9f48fe0218184529a147f
 COMPONENT_ARCHIVE_URL=	http://www.northfield.ws/projects/compiz/releases/$(COMPONENT_VERSION)/$(COMPONENT_SRC).tar.xz
 COMPONENT_CLASSIFICATION=Desktop (GNOME)/Window Managers
 COMPONENT_LICENSE_FILE=	compiz.license
 COMPONENT_LICENSE=	MIT, LGPLv2.1, GPLv2
 
-include $(WS_TOP)/make-rules/prep.mk
-include $(WS_TOP)/make-rules/configure.mk
-include $(WS_TOP)/make-rules/ips.mk
+TEST_TARGET = $(NO_TESTS)
+
+include $(WS_MAKE_RULES)/common.mk
 
 PATH=$(PATH.gnu)
 
@@ -46,7 +46,6 @@ COMPONENT_PREP_ACTION =        ( cd $(@D) && \
                                         intltoolize )
 
 CONFIGURE_ENV+=	INTLTOOL_PERL=$(PERL)
-CONFIGURE_ENV+=	PYTHON=$(PYTHON)
 
 CONFIGURE_OPTIONS+=	--sysconfdir=/etc
 CONFIGURE_OPTIONS+=	--enable-mate
@@ -54,14 +53,8 @@ CONFIGURE_OPTIONS+=	--enable-marco
 CONFIGURE_OPTIONS+=	--disable-static
 CONFIGURE_OPTIONS+=	--with-default-plugins=animation,core,ccp,dbus,decoration,fade,matecompat,imgjpeg,move,place,png,regex,resize,resizeinfo,session,svg,switcher,wall,workarounds
 
-# common targets
-build:		$(BUILD_64)
-
-install:	$(INSTALL_64)
-
-test:		$(NO_TESTS)
-
 # Auto-generated dependencies
+REQUIRED_PACKAGES += SUNWcs
 REQUIRED_PACKAGES += desktop/mate/marco
 REQUIRED_PACKAGES += image/library/libpng16
 REQUIRED_PACKAGES += image/library/librsvg
@@ -73,10 +66,12 @@ REQUIRED_PACKAGES += library/desktop/libwnck3
 REQUIRED_PACKAGES += library/desktop/pango
 REQUIRED_PACKAGES += library/desktop/startup-notification
 REQUIRED_PACKAGES += library/glib2
+REQUIRED_PACKAGES += library/libfuse
 REQUIRED_PACKAGES += library/libxml2
 REQUIRED_PACKAGES += shell/bash
 REQUIRED_PACKAGES += system/library
 REQUIRED_PACKAGES += system/library/libdbus
+REQUIRED_PACKAGES += system/library/libdbus-glib
 REQUIRED_PACKAGES += system/library/math
 REQUIRED_PACKAGES += x11/library/glu
 REQUIRED_PACKAGES += x11/library/libice

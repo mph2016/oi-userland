@@ -21,28 +21,30 @@
 
 #
 # Copyright (c) 2011, 2013, Oracle and/or its affiliates. All rights reserved.
-# Copyright 2018, Michal Nowak
+# Copyright 2019, Michal Nowak
 #
+
+BUILD_BITS=		64
 
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		mutt
-COMPONENT_VERSION=	1.10.1
+COMPONENT_VERSION=	1.14.7
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.gz
 COMPONENT_ARCHIVE_HASH=	\
-    sha256:734a3883158ec3d180cf6538d8bd7f685ce641d2cdef657aa0038f76e79a54a0
+	sha256:e4f507b133253cb5eef27996b8668956cdf9caac622cf8adad13f0f9a4eda864
 COMPONENT_ARCHIVE_URL=	ftp://ftp.mutt.org/pub/mutt/$(COMPONENT_ARCHIVE)
-COMPONENT_PROJECT_URL=	http://www.mutt.org/
-COMPONENT_BUGDB=	utility/mutt
+COMPONENT_PROJECT_URL=	https://www.mutt.org/
 COMPONENT_FMRI=		mail/mutt
+COMPONENT_LICENSE_FILE=	mutt.license
+COMPONENT_LICENSE=	GPLv2
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET=		$(NO_TESTS)
 
-# Deliver 64-bin binaries in standard paths
-CONFIGURE_BINDIR.64 = $(CONFIGURE_PREFIX)/bin
+include $(WS_MAKE_RULES)/common.mk
+
+CFLAGS +=			-I$(USRINCDIR)/idn2
 
 CONFIGURE_OPTIONS  +=		CFLAGS="$(CFLAGS)"
 CONFIGURE_OPTIONS  +=		--sysconfdir="$(ETCDIR)/$(COMPONENT_NAME)"
@@ -57,18 +59,10 @@ CONFIGURE_OPTIONS  +=		--with-regex
 CONFIGURE_OPTIONS  +=		--with-slang
 CONFIGURE_OPTIONS  +=		--with-ssl
 CONFIGURE_OPTIONS  +=		--with-idn2
-CFLAGS +=			-I"$(USRINCDIR)/idn2"
 CONFIGURE_OPTIONS  +=		--with-wc-funcs
 CONFIGURE_OPTIONS  +=		--with-sasl
 
-ASLR_MODE = $(ASLR_ENABLE)
-
-# common targets
-build:		$(BUILD_64)
-
-install:	$(INSTALL_64)
-
-test:		$(NO_TESTS)
+REQUIRED_PACKAGES += runtime/perl-522
 
 # Auto-generated dependencies
 REQUIRED_PACKAGES += SUNWcs
@@ -76,7 +70,7 @@ REQUIRED_PACKAGES += library/database/gdbm
 REQUIRED_PACKAGES += library/libidn2
 REQUIRED_PACKAGES += library/security/openssl
 REQUIRED_PACKAGES += library/slang
-REQUIRED_PACKAGES += runtime/perl-522
+REQUIRED_PACKAGES += library/zlib
 REQUIRED_PACKAGES += runtime/perl-524
 REQUIRED_PACKAGES += system/library
 REQUIRED_PACKAGES += system/library/security/libsasl

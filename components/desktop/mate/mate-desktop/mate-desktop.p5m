@@ -11,7 +11,7 @@
 
 #
 # Copyright 2015 Alexander Pyhalov
-# Copyright 2019 Michal Nowak
+# Copyright 2020 Michal Nowak
 #
 
 set name=pkg.fmri value=pkg:/$(COMPONENT_FMRI)@$(IPS_COMPONENT_VERSION),$(BUILD_VERSION)
@@ -25,6 +25,8 @@ license $(COMPONENT_LICENSE_FILE) license='$(COMPONENT_LICENSE)'
 
 depend type=require fmri=gnome/theme/background/os-backgrounds
 
+#file path=usr/bin/$(MACH32)/mate-about
+#file path=usr/bin/$(MACH32)/mate-color-select
 file path=usr/bin/mate-about
 file path=usr/bin/mate-color-select
 file path=usr/include/mate-desktop-2.0/libmate-desktop/mate-bg-crossfade.h
@@ -38,6 +40,7 @@ file path=usr/include/mate-desktop-2.0/libmate-desktop/mate-desktop-thumbnail.h
 file path=usr/include/mate-desktop-2.0/libmate-desktop/mate-desktop-utils.h
 file path=usr/include/mate-desktop-2.0/libmate-desktop/mate-desktop.h
 file path=usr/include/mate-desktop-2.0/libmate-desktop/mate-gsettings.h
+file path=usr/include/mate-desktop-2.0/libmate-desktop/mate-hsv.h
 file path=usr/include/mate-desktop-2.0/libmate-desktop/mate-languages.h
 file path=usr/include/mate-desktop-2.0/libmate-desktop/mate-rr-config.h
 file path=usr/include/mate-desktop-2.0/libmate-desktop/mate-rr-labeler.h
@@ -49,7 +52,6 @@ link path=usr/lib/$(MACH64)/libmate-desktop-2.so.17 \
     target=libmate-desktop-2.so.17.1.4
 file path=usr/lib/$(MACH64)/libmate-desktop-2.so.17.1.4
 file path=usr/lib/$(MACH64)/pkgconfig/mate-desktop-2.0.pc
-file path=usr/lib/girepository-1.0/MateDesktop-2.0.typelib
 link path=usr/lib/libmate-desktop-2.so target=libmate-desktop-2.so.17.1.4
 link path=usr/lib/libmate-desktop-2.so.17 target=libmate-desktop-2.so.17.1.4
 file path=usr/lib/libmate-desktop-2.so.17.1.4
@@ -63,6 +65,7 @@ file path=usr/share/glib-2.0/schemas/org.mate.applications-at-mobility.gschema.x
 file path=usr/share/glib-2.0/schemas/org.mate.applications-at-visual.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.applications-browser.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.applications-calculator.gschema.xml
+file path=usr/share/glib-2.0/schemas/org.mate.applications-messenger.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.applications-office.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.applications-terminal.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.background.gschema.xml
@@ -70,8 +73,6 @@ file path=usr/share/glib-2.0/schemas/org.mate.debug.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.file-views.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.interface.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.lockdown.gschema.xml
-file path=usr/share/glib-2.0/schemas/org.mate.peripherals-keyboard.gschema.xml
-file path=usr/share/glib-2.0/schemas/org.mate.peripherals-mouse.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.sound.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.thumbnail-cache.gschema.xml
 file path=usr/share/glib-2.0/schemas/org.mate.thumbnailers.gschema.xml
@@ -136,12 +137,14 @@ file path=usr/share/locale/hu/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/hy/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/ia/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/id/LC_MESSAGES/mate-desktop.mo
+file path=usr/share/locale/ie/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/ig/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/is/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/it/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/ja/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/jv/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/ka/LC_MESSAGES/mate-desktop.mo
+file path=usr/share/locale/kab/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/kk/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/kn/LC_MESSAGES/mate-desktop.mo
 file path=usr/share/locale/ko/LC_MESSAGES/mate-desktop.mo

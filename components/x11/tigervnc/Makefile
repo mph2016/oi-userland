@@ -13,13 +13,15 @@
 # Copyright 2014 Alexander Pyhalov.  All rights reserved.
 #
 
-PREFERRED_BITS = 64
+BUILD_BITS= 64
+BUILD_STYLE= cmake
 
 include ../../../make-rules/shared-macros.mk
+include $(WS_MAKE_RULES)/x11.mk
 
 COMPONENT_NAME= tigervnc
 COMPONENT_VERSION= 1.8.0
-COMPONENT_REVISION= 2
+COMPONENT_REVISION= 5
 COMPONENT_SUMMARY= TigerVNC X11/VNC server
 COMPONENT_SRC= $(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE= $(COMPONENT_SRC).tar.gz
@@ -39,9 +41,9 @@ XORG_ADDITIONAL_PATCH_1 = $(PATCH_DIR)/tigervnc-screenlock.patch
 XORG_SERVER_VERSION= 1.19.7
 XORG_SERVER_PATCH= xserver119.patch
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/cmake.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET=	$(NO_TESTS)
+
+include $(WS_MAKE_RULES)/common.mk
 
 # Avoid prepending /usr/gnu/bin to $(PATH)
 # as ld is used during dix build and GNU ld
@@ -75,15 +77,6 @@ JPEG_PKG_CONFIG_PATH = $(JPEG_LIBDIR.$(BITS))/pkgconfig
 CFLAGS   += -std=gnu99
 CXXFLAGS += -std=gnu++98
 
-# Force use of gnutls-3 pkgconfig during 2.x->3.x transition
-GNUTLS_PKG_CONFIG_PATH_32 = /usr/lib/pkgconfig/gnutls-3
-GNUTLS_PKG_CONFIG_PATH_64 = /usr/lib/$(MACH64)/pkgconfig/gnutls-3
-PKG_CONFIG_PATH = $(GNUTLS_PKG_CONFIG_PATH_$(BITS)):$(JPEG_PKG_CONFIG_PATH):$(PKG_CONFIG_PATH.$(BITS))
-
-LD_OPTIONS.32 += -L/usr/lib/gnutls-3 -R/usr/lib/gnutls-3
-LD_OPTIONS.64 += -L/usr/lib/$(MACH64)/gnutls-3 -R/usr/lib/$(MACH64)/gnutls-3
-LD_OPTIONS += $(LD_OPTIONS.$(BITS))
-
 COMPONENT_PRE_CMAKE_ACTION =        ($(CLONEY) $(SOURCE_DIR) $(@D))
 
 CMAKE_OPTIONS+= -DCMAKE_BUILD_TYPE=Release
@@ -92,6 +85,10 @@ CMAKE_OPTIONS+= -DBUILD_JAVA:BOOL=TRUE
 CMAKE_OPTIONS+= -DCMAKE_C_ARCHIVE_CREATE:STRING="crS"
 CMAKE_OPTIONS+= -DCMAKE_CXX_ARCHIVE_CREATE:STRING="crS"
 CMAKE_OPTIONS+= -G "Unix Makefiles"
+
+# Disable epoll on illumos
+XVNC_CONFIGURE_OPTIONS+= ac_cv_func_epoll_ctl=no
+XVNC_CONFIGURE_OPTIONS+= ac_cv_func_epoll_create1=no
 
 CONFIGURE_LIBDIR = /usr/lib/vnc
 
@@ -105,9 +102,7 @@ CPPFLAGS += -I/usr/include/mesa
 CPPFLAGS += -I/usr/include/xorg
 
 # Required for linking to libXfont2
-X11_SERVERLIBS_DIR.32=/usr/lib/xorg
-X11_SERVERLIBS_DIR.64=/usr/lib/xorg/$(MACH64)
-LDFLAGS+= -L$(X11_SERVERLIBS_DIR.$(BITS)) -R$(X11_SERVERLIBS_DIR.$(BITS)) 
+LDFLAGS+= -L$(X11_SERVERLIBS_DIR) -R$(X11_SERVERLIBS_DIR) 
 
 CONFIGURE_ENV += CPPFLAGS="$(CPPFLAGS)"
 CMAKE_ENV += CPPFLAGS="$(CPPFLAGS)"
@@ -118,7 +113,7 @@ JAVA_INSTALL_DIR = $(PROTO_DIR)/usr/share/vnc/classes
 
 XVNC_CONFIGURE_SCRIPT=	$(BUILD_DIR_64)/unix/xserver/configure
 
-XVNC_CONFIGURE_OPTIONS += --bindir=/usr/bin
+XVNC_CONFIGURE_OPTIONS += --bindir=$(USRBINDIR)
 XVNC_CONFIGURE_OPTIONS += --disable-builddocs
 XVNC_CONFIGURE_OPTIONS += --disable-config-hal
 XVNC_CONFIGURE_OPTIONS += --disable-dga

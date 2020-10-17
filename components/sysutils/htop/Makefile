@@ -21,47 +21,35 @@
 
 #
 # Copyright 2018, Aurelien Larcher
-# Copyright 2019, Michal Nowak
+# Copyright 2020, Michal Nowak
+# Copyright 2020, Andreas Wacknitz
 #
 
-PREFERRED_BITS=64
+BUILD_BITS=		64
 
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		htop
-COMPONENT_VERSION=	2.2.0
-COMPONENT_REVISION=	1
+COMPONENT_VERSION=	3.0.2
 COMPONENT_FMRI=		diagnostic/htop
+COMPONENT_CLASSIFICATION=	Applications/System Utilities
 COMPONENT_SUMMARY=	htop - an interactive process viewer for Unix
-COMPONENT_PROJECT_URL=	https://hisham.hm/htop/
-COMPONENT_SRC=		htop-220-sunos_11-p1
+COMPONENT_PROJECT_URL=	https://htop.dev/
+COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.gz
 COMPONENT_ARCHIVE_HASH= \
-	sha256:378c513eea60e352a526db809cb5c3d211fc4c927dde21ec9e5124d63c86d078
-# htop is broken without https://github.com/hishamhm/htop/pull/880 and
-# as upstream seems stalled on this (and other things), we opt for a source
-# which has illumos fixes included. Revert to the source below once merged:
-#
-# COMPONENT_SRC=	$(COMPONENT_NAME)-$(COMPONENT_VERSION)
-# COMPONENT_ARCHIVE_URL= \
-# 	https://hisham.hm/htop/releases/$(COMPONENT_VERSION)/$(COMPONENT_ARCHIVE)
+	sha256:b4744a3bea279f2a3725ed8e5e35ffd9cb10d66673bf07c8fe21feb3c4661305
 COMPONENT_ARCHIVE_URL= \
-	https://github.com/ninefathom/htop/archive/220-sunos_11-p1.tar.gz
+	https://github.com/htop-dev/$(COMPONENT_NAME)/archive/$(COMPONENT_VERSION).tar.gz
 COMPONENT_LICENSE=  GPLv2 
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET=		$(NO_TESTS)
 
-PATH=$(PATH.gnu)
+include $(WS_MAKE_RULES)/common.mk
+
+PATH=$(GNUBIN64):$(PATH.gnu)
 
 COMPONENT_PREP_ACTION= ( cd $(@D); $(RM) config.h; sh autogen.sh )
-
-build:		$(BUILD_64)
-
-install:	$(INSTALL_64)
-
-test:		$(NO_TESTS)
 
 # Auto-generated dependencies
 REQUIRED_PACKAGES += library/ncurses

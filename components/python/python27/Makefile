@@ -21,25 +21,24 @@
 # Copyright (c) 2011, 2014, Oracle and/or its affiliates. All rights reserved.
 # Copyright (c) 2019, Michal Nowak
 
-#
+BUILD_BITS=		32_and_64
+
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		Python
-COMPONENT_VERSION=	2.7.16
+COMPONENT_VERSION=	2.7.18
+COMPONENT_REVISION=	2
 COMPONENT_PROJECT_URL=	https://python.org
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.xz
 COMPONENT_ARCHIVE_HASH=	\
-	sha256:f222ef602647eecb6853681156d32de4450a2c39f4de93bd5b20235f2e660ed7
+	sha256:b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43
 COMPONENT_ARCHIVE_URL=	$(COMPONENT_PROJECT_URL)/ftp/python/$(COMPONENT_VERSION)/$(COMPONENT_ARCHIVE)
 COMPONENT_SIG_URL=	$(COMPONENT_ARCHIVE_URL).asc
-COMPONENT_BUGDB=	utility/python
 
 CONFIGURE_FIX_LIBTOOL_RPATH = no
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+include $(WS_MAKE_RULES)/common.mk
 
 # Need to preserve timestamp for Grammar files.  If the pickle files are older,
 # Python will try to rebuild them.
@@ -108,12 +107,7 @@ COMPONENT_POST_INSTALL_ACTION= \
              $(MV) include/python2.7/pyconfig.h include/python2.7/pyconfig-$(BITS).h ; \
              $(TOUCH) lib/python2.7/lib2to3/*.pickle)
 
-# common targets
 $(INSTALL_32):  $(INSTALL_64)
-
-build:		$(BUILD_32_and_64)
-
-install:	$(INSTALL_32_and_64)
 
 # Using "-uall,-network" ensures all tests are run except the network tests.
 # The network tests contain many expected failures when run behind a firewall.
@@ -157,3 +151,5 @@ REQUIRED_PACKAGES += runtime/tk-8
 REQUIRED_PACKAGES += SUNWcs
 REQUIRED_PACKAGES += system/library
 REQUIRED_PACKAGES += system/library/math
+# Required to build ossaudiodev module
+REQUIRED_PACKAGES += system/header/header-audio

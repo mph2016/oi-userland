@@ -37,6 +37,7 @@ file path=usr/mariadb/10.3/include/mariadb/ma_io.h
 file path=usr/mariadb/10.3/include/mariadb_com.h
 file path=usr/mariadb/10.3/include/mariadb_ctype.h
 file path=usr/mariadb/10.3/include/mariadb_dyncol.h
+file path=usr/mariadb/10.3/include/mariadb_rpl.h
 file path=usr/mariadb/10.3/include/mariadb_stmt.h
 file path=usr/mariadb/10.3/include/mariadb_version.h
 file path=usr/mariadb/10.3/include/my_config.h mode=0444
@@ -173,6 +174,7 @@ file path=usr/mariadb/10.3/include/server/private/hash.h
 file path=usr/mariadb/10.3/include/server/private/hash_filo.h
 file path=usr/mariadb/10.3/include/server/private/heap.h
 file path=usr/mariadb/10.3/include/server/private/hostname.h
+file path=usr/mariadb/10.3/include/server/private/ilist.h
 file path=usr/mariadb/10.3/include/server/private/init.h
 file path=usr/mariadb/10.3/include/server/private/innodb_priv.h
 file path=usr/mariadb/10.3/include/server/private/item.h
@@ -284,6 +286,7 @@ file path=usr/mariadb/10.3/include/server/private/slave.h
 file path=usr/mariadb/10.3/include/server/private/source_revision.h
 file path=usr/mariadb/10.3/include/server/private/sp.h
 file path=usr/mariadb/10.3/include/server/private/sp_cache.h
+file path=usr/mariadb/10.3/include/server/private/span.h
 file path=usr/mariadb/10.3/include/server/private/sp_head.h
 file path=usr/mariadb/10.3/include/server/private/sp_pcontext.h
 file path=usr/mariadb/10.3/include/server/private/sp_rcontext.h
@@ -331,6 +334,7 @@ file path=usr/mariadb/10.3/include/server/private/sql_list.h
 file path=usr/mariadb/10.3/include/server/private/sql_load.h
 file path=usr/mariadb/10.3/include/server/private/sql_locale.h
 file path=usr/mariadb/10.3/include/server/private/sql_manager.h
+file path=usr/mariadb/10.3/include/server/private/sql_mode.h
 file path=usr/mariadb/10.3/include/server/private/sql_parse.h
 file path=usr/mariadb/10.3/include/server/private/sql_partition.h
 file path=usr/mariadb/10.3/include/server/private/sql_partition_admin.h
@@ -343,6 +347,7 @@ file path=usr/mariadb/10.3/include/server/private/sql_profile.h
 file path=usr/mariadb/10.3/include/server/private/sql_reload.h
 file path=usr/mariadb/10.3/include/server/private/sql_rename.h
 file path=usr/mariadb/10.3/include/server/private/sql_repl.h
+file path=usr/mariadb/10.3/include/server/private/sql_schema.h
 file path=usr/mariadb/10.3/include/server/private/sql_select.h
 file path=usr/mariadb/10.3/include/server/private/sql_sequence.h
 file path=usr/mariadb/10.3/include/server/private/sql_servers.h
@@ -360,6 +365,7 @@ file path=usr/mariadb/10.3/include/server/private/sql_truncate.h
 file path=usr/mariadb/10.3/include/server/private/sql_tvc.h
 file path=usr/mariadb/10.3/include/server/private/sql_type.h
 file path=usr/mariadb/10.3/include/server/private/sql_type_int.h
+file path=usr/mariadb/10.3/include/server/private/sql_type_real.h
 file path=usr/mariadb/10.3/include/server/private/sql_udf.h
 file path=usr/mariadb/10.3/include/server/private/sql_union.h
 file path=usr/mariadb/10.3/include/server/private/sql_update.h
@@ -388,6 +394,7 @@ file path=usr/mariadb/10.3/include/server/private/vers_utils.h
 file path=usr/mariadb/10.3/include/server/private/violite.h
 file path=usr/mariadb/10.3/include/server/private/waiting_threads.h
 file path=usr/mariadb/10.3/include/server/private/welcome_copyright_notice.h
+file path=usr/mariadb/10.3/include/server/private/win_tzname_data.h
 file path=usr/mariadb/10.3/include/server/private/winservice.h
 file path=usr/mariadb/10.3/include/server/private/wqueue.h
 file path=usr/mariadb/10.3/include/server/private/wsrep.h
@@ -421,6 +428,7 @@ link path=usr/mariadb/10.3/lib/libmysqlclient_r.so target=libmariadb.so.3
 link path=usr/mariadb/10.3/lib/libmysqld.a target=libmariadbd.a
 link path=usr/mariadb/10.3/lib/libmysqld.so target=libmariadbd.so
 file path=usr/mariadb/10.3/lib/libmysqlservices.a
+file path=usr/mariadb/10.3/lib/pkgconfig/mariadb.pc
 link path=usr/mariadb/10.3/lib/$(MACH64)/libmariadb.so target=libmariadb.so.3
 file path=usr/mariadb/10.3/lib/$(MACH64)/libmariadb.so.3
 file path=usr/mariadb/10.3/lib/$(MACH64)/libmariadbclient.a
@@ -438,8 +446,7 @@ link path=usr/mariadb/10.3/lib/$(MACH64)/libmysqlclient_r.so \
 link path=usr/mariadb/10.3/lib/$(MACH64)/libmysqld.a target=libmariadbd.a
 link path=usr/mariadb/10.3/lib/$(MACH64)/libmysqld.so target=libmariadbd.so.19
 file path=usr/mariadb/10.3/lib/$(MACH64)/libmysqlservices.a
+file path=usr/mariadb/10.3/lib/$(MACH64)/pkgconfig/mariadb.pc
 
 file path=usr/mariadb/10.3/lib/pkgconfig/libmariadb.pc
 file path=usr/mariadb/10.3/share/aclocal/mysql.m4
-
-file path=usr/mariadb/10.3/share/pkgconfig/mariadb.pc

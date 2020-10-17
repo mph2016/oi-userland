@@ -13,53 +13,26 @@
 # Copyright 2015 Ken Mays
 #
 
+X11_CATEGORY=DRIVER
 include ../../../make-rules/shared-macros.mk
+include $(WS_MAKE_RULES)/x11.mk
 
 COMPONENT_NAME= xf86-video-vmware
 COMPONENT_VERSION= 13.3.0
+COMPONENT_REVISION= 2
+COMPONENT_FMRI= x11/server/xorg/driver/xorg-video-vmware
 COMPONENT_SUMMARY= xf86-video-vmware - VMWare driver for the Xorg X server
-COMPONENT_PROJECT_URL = http://xorg.freedesktop.org
-COMPONENT_FMRI = x11/server/xorg/driver/xorg-video-vmware
-COMPONENT_CLASSIFICATION= Drivers/Display
-COMPONENT_SRC= $(COMPONENT_NAME)-$(COMPONENT_VERSION)
-COMPONENT_ARCHIVE= $(COMPONENT_SRC).tar.bz2
-COMPONENT_ARCHIVE_URL= \
-  http://xorg.freedesktop.org/archive/individual/driver/$(COMPONENT_ARCHIVE)
 COMPONENT_ARCHIVE_HASH= \
   sha256:47971924659e51666a757269ad941a059ef5afe7a47b5101c174a6022ac4066c
-COMPONENT_LICENSE = MIT
-COMPONENT_LICENSE_FILE = COPYING
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
-
-COMPONENT_PREP_ACTION = ( cd $(@D) && \
-                          libtoolize --automake --copy --force && \
-                          aclocal && \
-                          autoheader && \
-                          automake -a -f -c && \
-                          autoconf )
-
-# Paths to find libraries/modules to link with 
-
-SERVERMOD_SUBDIR.64=/$(MACH64)
-SERVERMOD_SUBDIR=$(SERVERMOD_SUBDIR.$(BITS))
-X11_SERVERMODS_DIR=/usr/lib/xorg/modules
-X11_SERVERLIBS_DIR=/usr/lib/xorg
+include $(WS_MAKE_RULES)/common.mk
 
 LD_OPTIONS= \
-        -L$(X11_SERVERMODS_DIR)$(SERVERMOD_SUBDIR) \
-        -R$(X11_SERVERMODS_DIR)$(SERVERMOD_SUBDIR) \
+        -L$(X11_SERVERMODS_DIR) -R$(X11_SERVERMODS_DIR) \
         -lfb -lpixman-1 -lshadowfb -lvgahw -lpciaccess
 
-build: $(BUILD_32_and_64)
-
-install: $(INSTALL_32_and_64)
-
 # Build dependencies
-REQUIRED_PACKAGES += x11/header/xproto
-REQUIRED_PACKAGES += x11/header/fontsproto
+REQUIRED_PACKAGES += x11/header/x11-protocols
 REQUIRED_PACKAGES += system/header/header-drm
 
 # Auto-generated dependencies

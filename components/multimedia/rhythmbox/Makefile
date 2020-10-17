@@ -11,17 +11,21 @@
 
 #
 # Copyright 2017 Alexander Pyhalov
+# Copyright 2019 Michal Nowak
 #
+
+BUILD_BITS= 64
 
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME= rhythmbox
-COMPONENT_VERSION= 3.4.2
+COMPONENT_VERSION= 3.4.4
+COMPONENT_REVISION= 1
 COMPONENT_SUMMARY= Rhythmbox Multimedia Player
 COMPONENT_SRC= $(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE= $(COMPONENT_SRC).tar.xz
 COMPONENT_ARCHIVE_HASH= \
-  sha256:c27622fb7658d3c8e935937a562ebd8a65f5316a12694d6a06cb17f790b6ec43
+  sha256:ee0eb0d7d7bdf696ac9471b19ff3bea3240d63b6cb8a134bf632054af8665d90
 COMPONENT_ARCHIVE_URL= \
   http://ftp.gnome.org/pub/GNOME/sources/$(COMPONENT_NAME)/3.4/$(COMPONENT_ARCHIVE)
 COMPONENT_PROJECT_URL = http://www.gnome.org
@@ -30,9 +34,8 @@ COMPONENT_CLASSIFICATION= Applications/Sound and Video
 COMPONENT_LICENSE= GPLv2
 COMPONENT_LICENSE_FILE= COPYING
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET= $(NO_TESTS)
+include $(WS_MAKE_RULES)/common.mk
 
 PATH=$(PATH.gnu)
 
@@ -45,16 +48,12 @@ COMPONENT_PRE_CONFIGURE_ACTION =	($(CLONEY) $(SOURCE_DIR) $(@D) )
 
 CONFIGURE_OPTIONS+= --sysconfdir=/etc
 CONFIGURE_OPTIONS+= --disable-browser-plugin
-CONFIGURE_OPTIONS+= --libexecdir=/usr/lib
+CONFIGURE_OPTIONS+= --libexecdir=$(CONFIGURE_LIBDIR.$(BITS))
 CONFIGURE_OPTIONS+= --localstatedir=/var/lib
-CONFIGURE_ENV    += PYTHON=$(PYTHON.3.4.$(BITS))
+CONFIGURE_ENV    += PYTHON=$(PYTHON.3.5.$(BITS))
 
 COMPONENT_BUILD_ENV += CC="$(CC)"
 COMPONENT_BUILD_ENV += CFLAGS="$(CFLAGS)"
-
-build: $(BUILD_32)
-
-install: $(INSTALL_32)
 
 # Build dependencies
 REQUIRED_PACKAGES += text/itstool
@@ -84,3 +83,4 @@ REQUIRED_PACKAGES += system/library/libdbus
 REQUIRED_PACKAGES += system/library/libdbus-glib
 REQUIRED_PACKAGES += system/library/math
 REQUIRED_PACKAGES += x11/library/libx11
+REQUIRED_PACKAGES += developer/documentation-tool/gtk-doc

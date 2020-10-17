@@ -35,15 +35,17 @@
 <transform file path=usr/lib/python3.5/lib-dynload/.*\.so -> \
     add pkg.linted.userland.action001.2 true>
 <transform file path=.*/(idle_)?tests?/.* -> default facet.optional.test true>
+
 set name=pkg.fmri \
     value=pkg:/runtime/python-35@$(IPS_COMPONENT_VERSION),$(BUILD_VERSION)
-set name=pkg.summary value="The Python interpreter, libraries and utilities"
-set name=info.classification \
-    value=org.opensolaris.category.2008:Development/Python
+set name=pkg.summary value="$(COMPONENT_SUMMARY)"
+set name=info.classification value="$(COMPONENT_CLASSIFICATION)"
 set name=info.upstream-url value=$(COMPONENT_PROJECT_URL)
 set name=info.source-url value=$(COMPONENT_ARCHIVE_URL)
 set name=org.opensolaris.consolidation value=$(CONSOLIDATION)
-#
+
+license python35.license license='$(COMPONENT_LICENSE)'
+
 link path=usr/bin/2to3 target=2to3-3.5 mediator=python mediator-version=3.5
 file path=usr/bin/2to3-3.5
 link path=usr/bin/idle target=idle3.5 mediator=python mediator-version=3.5
@@ -375,6 +377,8 @@ file path=usr/lib/python3.5/distutils/command/sdist.py
 file path=usr/lib/python3.5/distutils/command/upload.py
 file path=usr/lib/python3.5/distutils/command/wininst-10.0-amd64.exe
 file path=usr/lib/python3.5/distutils/command/wininst-10.0.exe
+file path=usr/lib/python3.5/distutils/command/wininst-14.0-amd64.exe
+file path=usr/lib/python3.5/distutils/command/wininst-14.0.exe
 file path=usr/lib/python3.5/distutils/command/wininst-6.0.exe
 file path=usr/lib/python3.5/distutils/command/wininst-7.1.exe
 file path=usr/lib/python3.5/distutils/command/wininst-8.0.exe
@@ -1154,6 +1158,7 @@ file path=usr/lib/python3.5/test/capath/5ed36f99.0
 file path=usr/lib/python3.5/test/capath/6e88d7b8.0
 file path=usr/lib/python3.5/test/capath/99d0fa06.0
 file path=usr/lib/python3.5/test/capath/ce7b8643.0
+file path=usr/lib/python3.5/test/capath/efa5f9c3.0
 file path=usr/lib/python3.5/test/cfgparser.1
 file path=usr/lib/python3.5/test/cfgparser.2
 file path=usr/lib/python3.5/test/cfgparser.3
@@ -1335,7 +1340,6 @@ file path=usr/lib/python3.5/test/decimaltestdata/testall.decTest
 file path=usr/lib/python3.5/test/decimaltestdata/tointegral.decTest
 file path=usr/lib/python3.5/test/decimaltestdata/tointegralx.decTest
 file path=usr/lib/python3.5/test/decimaltestdata/xor.decTest
-file path=usr/lib/python3.5/test/dh1024.pem
 file path=usr/lib/python3.5/test/dis_module.py
 file path=usr/lib/python3.5/test/dlpitest.py
 file path=usr/lib/python3.5/test/doctest_aliases.py
@@ -1347,6 +1351,7 @@ file path=usr/lib/python3.5/test/encoded_modules/__init__.py
 file path=usr/lib/python3.5/test/encoded_modules/module_iso_8859_1.py
 file path=usr/lib/python3.5/test/encoded_modules/module_koi8_r.py
 file path=usr/lib/python3.5/test/exception_hierarchy.txt
+file path=usr/lib/python3.5/test/ffdh3072.pem
 file path=usr/lib/python3.5/test/final_a.py
 file path=usr/lib/python3.5/test/final_b.py
 file path=usr/lib/python3.5/test/floating_points.txt
@@ -1408,6 +1413,7 @@ file path=usr/lib/python3.5/test/randv2_32.pck
 file path=usr/lib/python3.5/test/randv2_64.pck
 file path=usr/lib/python3.5/test/randv3.pck
 file path=usr/lib/python3.5/test/re_tests.py
+file path=usr/lib/python3.5/test/recursion.tar
 # XXX bootstrap
 # file path=usr/lib/python3.5/test/regrtest.py
 #    pkg.depend.bypass-generate=.*/msvcrt.*
@@ -1445,6 +1451,7 @@ file path=usr/lib/python3.5/test/subprocessdata/qgrep.py
 file path=usr/lib/python3.5/test/subprocessdata/sigchild_ignore.py
 file path=usr/lib/python3.5/test/support/__init__.py
 file path=usr/lib/python3.5/test/support/script_helper.py
+file path=usr/lib/python3.5/test/talos-2019-0758.pem
 file path=usr/lib/python3.5/test/test___all__.py
 file path=usr/lib/python3.5/test/test___future__.py
 file path=usr/lib/python3.5/test/test__locale.py
@@ -1500,6 +1507,7 @@ file path=usr/lib/python3.5/test/test_bufio.py
 file path=usr/lib/python3.5/test/test_builtin.py
 file path=usr/lib/python3.5/test/test_bytes.py
 file path=usr/lib/python3.5/test/test_bz2.py
+file path=usr/lib/python3.5/test/test_c_locale_coercion.py
 file path=usr/lib/python3.5/test/test_calendar.py
 file path=usr/lib/python3.5/test/test_call.py
 file path=usr/lib/python3.5/test/test_capi.py
@@ -1814,8 +1822,7 @@ file path=usr/lib/python3.5/test/test_linecache.py
 file path=usr/lib/python3.5/test/test_list.py
 file path=usr/lib/python3.5/test/test_listcomps.py
 file path=usr/lib/python3.5/test/test_locale.py
-file path=usr/lib/python3.5/test/test_logging.py \
-    pkg.depend.bypass-generate=.*/win32evtlog.*
+file path=usr/lib/python3.5/test/test_logging.py pkg.depend.bypass-generate=.*/win32evtlog.*
 file path=usr/lib/python3.5/test/test_long.py
 file path=usr/lib/python3.5/test/test_longexp.py
 file path=usr/lib/python3.5/test/test_lzma.py
@@ -2146,6 +2153,8 @@ file path=usr/lib/python3.5/uuid.py
 file path=usr/lib/python3.5/venv/__init__.py
 file path=usr/lib/python3.5/venv/__main__.py
 file path=usr/lib/python3.5/venv/scripts/common/activate
+#file path=usr/lib/python3.5/venv/scripts/posix/activate.csh
+#file path=usr/lib/python3.5/venv/scripts/posix/activate.fish
 file path=usr/lib/python3.5/warnings.py
 file path=usr/lib/python3.5/wave.py
 file path=usr/lib/python3.5/weakref.py
@@ -2184,8 +2193,5 @@ file path=usr/lib/python3.5/xmlrpc/client.py
 file path=usr/lib/python3.5/xmlrpc/server.py
 file path=usr/lib/python3.5/zipapp.py
 file path=usr/lib/python3.5/zipfile.py
-link path=usr/share/man/man1/python3.1 target=python3.5.1 mediator=python \
-    mediator-version=3.5
+link path=usr/share/man/man1/python3.1 target=python3.5.1 mediator=python mediator-version=3.5
 file path=usr/share/man/man1/python3.5.1
-#
-license python35.license license=PSFv2

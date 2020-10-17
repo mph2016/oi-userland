@@ -15,11 +15,13 @@
 # Copyright 2019 Tim Mooney
 #
 
+BUILD_BITS= 32_and_64
+
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME= tracker
 COMPONENT_VERSION= 1.8.3
-COMPONENT_REVISION= 2
+COMPONENT_REVISION= 6
 COMPONENT_SUMMARY= Desktop search tool
 COMPONENT_SRC= $(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE= $(COMPONENT_SRC).tar.xz
@@ -32,9 +34,7 @@ COMPONENT_FMRI= library/desktop/search/tracker
 COMPONENT_CLASSIFICATION= Applications/System Utilities
 COMPONENT_LICENSE= GPLv2,LGPLv2.1
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+include $(WS_MAKE_RULES)/common.mk
 
 PATH=$(PATH.gnu)
 
@@ -69,7 +69,7 @@ CONFIGURE_OPTIONS += --enable-hal
 CONFIGURE_OPTIONS += --enable-icon
 CONFIGURE_OPTIONS += --enable-icu-charset-detection
 # Required for other components.
-CONFIGURE_OPTIONS += --enable-introspection
+CONFIGURE_OPTIONS.64 += --enable-introspection
 CONFIGURE_OPTIONS += --enable-journal
 CONFIGURE_OPTIONS += --enable-libexif
 CONFIGURE_OPTIONS += --enable-libflac
@@ -106,15 +106,11 @@ COMPONENT_BUILD_ENV += CFLAGS="$(CFLAGS)"
 
 COMPONENT_INSTALL_ENV+= GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 
-build: $(BUILD_32_and_64)
-
-install: $(INSTALL_32_and_64)
-
-test: $(TEST_32_and_64)
-
 # Build dependencies
 REQUIRED_PACKAGES += utility/bash-completion
 REQUIRED_PACKAGES += developer/icu
+REQUIRED_PACKAGES += library/desktop/gobject/gobject-introspection
+REQUIRED_PACKAGES += developer/documentation-tool/gtk-doc
 
 # Auto-generated dependencies
 REQUIRED_PACKAGES += codec/flac

@@ -12,30 +12,33 @@
 # Copyright 2014 EveryCity Ltd. All rights reserved.
 # Copyright 2015 Alexander Pyhalov
 # Copyright 2017 Aurelien Larcher
+# Copyright 2019 Michal Nowak
 #
+
+BUILD_BITS=		32_and_64
 
 include ../../../make-rules/shared-macros.mk
 
-COMPONENT_NAME=           qt
-COMPONENT_VERSION=        5.8.0
-COMPONENT_REVISION=       5
-COMPONENT_VERSION_MJR=    5.8
-COMPONENT_FMRI=           library/qt5
-COMPONENT_PROJECT_URL=    https://www.qt.io/
-COMPONENT_SUMMARY=        Qt cross-platform application and UI framework
+COMPONENT_NAME=		qt
+COMPONENT_VERSION=	5.8.0
+COMPONENT_VERSION_MJR=	5.8
+COMPONENT_REVISION=	12
+COMPONENT_FMRI=		library/qt5
+COMPONENT_PROJECT_URL=	https://www.qt.io/
+COMPONENT_SUMMARY=	Qt cross-platform application and UI framework
 COMPONENT_CLASSIFICATION= Desktop (GNOME)/Libraries
 COMPONENT_SRC=		$(COMPONENT_NAME)-everywhere-opensource-src-$(COMPONENT_VERSION)
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.gz
 COMPONENT_ARCHIVE_HASH=	\
-  sha256:9dc5932307ae452855863f6405be1f7273d91173dcbe4257561676a599bd58d3
+	sha256:9dc5932307ae452855863f6405be1f7273d91173dcbe4257561676a599bd58d3
 COMPONENT_ARCHIVE_URL=\
-  http://download.qt.io/official_releases/qt/$(COMPONENT_VERSION_MJR)/$(COMPONENT_VERSION)/single/$(COMPONENT_ARCHIVE)
-COMPONENT_LICENSE=        QT5
-COMPONENT_LICENSE_FILE=   qt5.license
+	http://download.qt.io/official_releases/qt/$(COMPONENT_VERSION_MJR)/$(COMPONENT_VERSION)/single/$(COMPONENT_ARCHIVE)
+COMPONENT_LICENSE=	QT5
+COMPONENT_LICENSE_FILE=	qt5.license
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET=		$(NO_TESTS)
+
+include $(WS_MAKE_RULES)/common.mk
 
 PATH=$(PG_BINDIR.$(BITS)):$(MYSQL_BINDIR.$(BITS)):$(GCC_ROOT)/bin:$(PATH.gnu)
 
@@ -92,19 +95,18 @@ COMPONENT_POST_INSTALL_ACTION= ( \
 	$(PROTO_DIR)$(QT_LIBDIR)/libQt5EglFsKmsSupport.so.$(COMPONENT_VERSION); \
 )
 
-build:		$(BUILD_32_and_64)
-
-install:	$(INSTALL_32_and_64)
-
 # Build dependencies
+REQUIRED_PACKAGES += $(PG_DEVELOPER_PKG)
 REQUIRED_PACKAGES += database/freetds
 REQUIRED_PACKAGES += database/mariadb-101/client
-REQUIRED_PACKAGES += database/postgres-94/developer
 REQUIRED_PACKAGES += system/header/header-drm
 REQUIRED_PACKAGES += x11/keyboard/data-xkb
 REQUIRED_PACKAGES += x11/library/libpthread-stubs
 
 # Auto-generated dependencies
+REQUIRED_PACKAGES += $(GCC_RUNTIME_PKG)
+REQUIRED_PACKAGES += $(GXX_RUNTIME_PKG)
+REQUIRED_PACKAGES += $(PG_LIBRARY_PKG)
 REQUIRED_PACKAGES += SUNWcs
 REQUIRED_PACKAGES += codec/jasper
 REQUIRED_PACKAGES += database/mariadb-101/library
@@ -120,6 +122,7 @@ REQUIRED_PACKAGES += library/audio/pulseaudio
 REQUIRED_PACKAGES += library/c++/harfbuzz
 REQUIRED_PACKAGES += library/desktop/gtk3
 REQUIRED_PACKAGES += library/desktop/pango
+REQUIRED_PACKAGES += library/desktop/speech-dispatcher
 REQUIRED_PACKAGES += library/freetds
 REQUIRED_PACKAGES += library/glib2
 REQUIRED_PACKAGES += library/icu
@@ -130,8 +133,6 @@ REQUIRED_PACKAGES += library/zlib
 REQUIRED_PACKAGES += system/library
 REQUIRED_PACKAGES += system/library/fontconfig
 REQUIRED_PACKAGES += system/library/freetype-2
-REQUIRED_PACKAGES += $(GXX_RUNTIME_PKG)
-REQUIRED_PACKAGES += $(GCC_RUNTIME_PKG)
 REQUIRED_PACKAGES += system/library/libdbus
 REQUIRED_PACKAGES += system/library/math
 REQUIRED_PACKAGES += text/hunspell

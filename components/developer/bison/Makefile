@@ -21,26 +21,26 @@
 
 #
 # Copyright (c) 2011, 2013, Oracle and/or its affiliates. All rights reserved.
-# Copyright 2019, Michal Nowak
+# Copyright 2020, Michal Nowak
 #
+
+BUILD_BITS=		32_and_64
 
 include ../../../make-rules/shared-macros.mk
 
 COMPONENT_NAME=		bison
-COMPONENT_VERSION=	3.3.2
-COMPONENT_PROJECT_URL=	http://www.gnu.org/software/bison/
+COMPONENT_VERSION=	3.5.4
+COMPONENT_PROJECT_URL=	https://www.gnu.org/software/bison/
 COMPONENT_SRC=		$(COMPONENT_NAME)-$(COMPONENT_VERSION)
 COMPONENT_SUMMARY=	bison - A YACC Replacement
 COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.xz
 COMPONENT_ARCHIVE_HASH=	\
-	sha256:039ee45b61d95e5003e7e8376f9080001b4066ff357bde271b7faace53b9d804
+	sha256:4c17e99881978fa32c05933c5262457fa5b2b611668454f8dc2a695cd6b3720c
 COMPONENT_ARCHIVE_URL=	http://ftp.gnu.org/gnu/bison/$(COMPONENT_ARCHIVE)
 COMPONENT_CLASSIFICATION=	Development/Other Languages
 COMPONENT_FMRI=		developer/parser/bison
 
-include $(WS_TOP)/make-rules/prep.mk
-include $(WS_TOP)/make-rules/configure.mk
-include $(WS_TOP)/make-rules/ips.mk
+include $(WS_MAKE_RULES)/common.mk
 
 # Tests need this
 COMPONENT_PRE_CONFIGURE_ACTION = \
@@ -70,31 +70,12 @@ COMPONENT_TEST_MASTER = $(COMPONENT_TEST_RESULTS_DIR)/results-all.master
 # and strange backslash lines. and random output,
 # including rm complaints over nfs
 COMPONENT_TEST_TRANSFORMS += \
-	'-e "s|^.*$(CC).*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^.*$(CXX).*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^.*source=.*libtool=no.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^.*DEPDIR=.deps.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^config.status: .*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^make.*: Leaving directory.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^make.*: Entering directory.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^make.*: Nothing to be done for.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^make.*: .*is up to date.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^mv -f.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^.$$|XXX_CC_XXX|g" ' \
-	'-e "s|^updating examples.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|.*build-aux/ylwrap.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|.*examples/calc++/calc++-parser.stamp.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|.*tests/bison -o y.tab.c.*$$|XXX_CC_XXX|g" ' \
-	'-e "s|^rm:.*directory renamed.*$$|XXX_CC_XXX|g" ' \
-	'-e "/^XXX_CC_XXX$$/d" '
+	$(CONFIGURE_TEST_TRANSFORMS) \
+	' -e "/^\#/p" ' \
+	' -e "/^[\s]*[0-9][0-9]*:/p" ' \
+	' -e "/tests were/p" ' 
 
 $(INSTALL_32):	$(INSTALL_64)
-
-build:		$(BUILD_32_and_64)
-
-install:	$(INSTALL_32_and_64)
-
-test:		$(TEST_32_and_64)
 
 # Two test suite cases utilitize Doxygen
 REQUIRED_PACKAGES += developer/documentation-tool/doxygen
@@ -102,3 +83,4 @@ REQUIRED_PACKAGES += developer/documentation-tool/doxygen
 REQUIRED_PACKAGES += developer/macro/gnu-m4
 REQUIRED_PACKAGES += system/library
 REQUIRED_PACKAGES += system/library/math
+REQUIRED_PACKAGES += text/gnu-gettext

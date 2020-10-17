@@ -20,7 +20,7 @@ set name=org.opensolaris.consolidation value=$(CONSOLIDATION)
 
 # GNU Autotools
 depend fmri=developer/build/autoconf type=require
-depend fmri=developer/build/automake-115 type=require
+depend fmri=developer/build/automake-116 type=require
 depend fmri=developer/build/libtool type=require
 depend fmri=library/libtool/libltdl type=require
 
@@ -34,9 +34,8 @@ depend fmri=developer/build/onbld type=require
 depend fmri=developer/build/help2man type=require
 depend fmri=developer/linker type=require
 
-# Compilers
-depend fmri=developer/sunstudio12u1/cc type=require
-depend fmri=developer/gcc-6 type=require
+# Compiler
+depend fmri=developer/gcc-7 type=require
 
 # Headers
 depend fmri=system/header type=require
@@ -107,6 +106,8 @@ depend fmri=developer/java/junit type=require
 depend fmri=runtime/perl-522 type=require
 depend fmri=runtime/lua type=require
 depend fmri=library/apr-util type=require
+depend fmri=runtime/python-27 type=require
+depend fmri=runtime/python-35 type=require
 
 # illumos-gate build dependencies
 depend fmri=developer/as type=require
@@ -122,7 +123,6 @@ depend fmri=library/security/trousers type=require
 depend fmri=print/cups type=require
 depend fmri=print/filter/ghostscript type=require
 depend fmri=runtime/perl-522/module/sun-solaris type=require
-depend fmri=system/library/install type=require
 depend fmri=system/library/dbus type=require
 depend fmri=system/library/libdbus type=require
 depend fmri=system/library/libdbus-glib type=require
@@ -130,5 +130,3 @@ depend fmri=system/library/mozilla-nss/header-nss type=require
 depend fmri=system/management/snmp/net-snmp type=require
 depend fmri=text/locale type=require
 depend fmri=developer/illumos-closed type=require
-# for demangle.h, remove once https://illumos.org/issues/6375 is fixed
-depend fmri=system/library/c++/sunpro type=require

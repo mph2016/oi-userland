@@ -11,27 +11,27 @@
 #
 # Copyright 2015 EveryCity Ltd. All rights reserved.
 # Copyright 2016 Alexander Pyhalov
-# Copyright 2016, 2017, 2018 Andreas Wacknitz
+# Copyright 2016 - 2020 Andreas Wacknitz
 #
 
+BUILD_BITS=     		32
 include ../../../make-rules/shared-macros.mk
 
-COMPONENT_NAME=		node
-COMPONENT_FMRI=		runtime/nodejs-10
-COMPONENT_SUMMARY=	Evented I/O for V8 JavaScript.
+COMPONENT_NAME=			node
+COMPONENT_FMRI=			runtime/nodejs-10
+COMPONENT_SUMMARY=		Evented I/O for V8 JavaScript.
 COMPONENT_CLASSIFICATION=	Development/Other Languages
-COMPONENT_PROJECT_URL=	http://nodejs.org
-COMPONENT_VERSION=	10.16.0
-COMPONENT_LICENSE=	BSD-like, MIT, Apache
-COMPONENT_LICENSE_FILE=	node.license	
-COMPONENT_SRC=		$(COMPONENT_NAME)-v$(COMPONENT_VERSION)
-COMPONENT_ARCHIVE=	$(COMPONENT_SRC).tar.xz
-COMPONENT_ARCHIVE_HASH= sha256:18e37f891d10ea7fbc8f6410c444c2b1d9cc3cbbb1d35aa9c41f761816956608
-COMPONENT_ARCHIVE_URL=	http://nodejs.org/dist/v$(COMPONENT_VERSION)/$(COMPONENT_ARCHIVE)
+COMPONENT_PROJECT_URL=	https://nodejs.org
+COMPONENT_VERSION=		10.22.1
+COMPONENT_LICENSE=		BSD-like, MIT, Apache
+COMPONENT_LICENSE_FILE=	LICENSE
+COMPONENT_SRC=			$(COMPONENT_NAME)-v$(COMPONENT_VERSION)
+COMPONENT_ARCHIVE=		$(COMPONENT_SRC).tar.xz
+COMPONENT_ARCHIVE_HASH= sha256:f47f4725dcae137b26f8e2a7d0ab2c2c7f1f47e4f96834e6a9242f157132255f
+COMPONENT_ARCHIVE_URL=	https://nodejs.org/dist/v$(COMPONENT_VERSION)/$(COMPONENT_ARCHIVE)
 
-include $(WS_MAKE_RULES)/prep.mk
-include $(WS_MAKE_RULES)/configure.mk
-include $(WS_MAKE_RULES)/ips.mk
+TEST_TARGET=            $(NO_TESTS)
+include $(WS_MAKE_RULES)/common.mk
 
 PATH=$(PATH.gnu)
 
@@ -40,10 +40,6 @@ COMPONENT_PRE_CONFIGURE_ACTION = (cp -a $(SOURCE_DIR)/* $(@D))
 CONFIGURE_SCRIPT =	$(@D)/configure
 
 CONFIGURE_OPTIONS= --prefix=/usr/node/10
-
-build:		$(BUILD_32)
-
-install:	$(INSTALL_32)
 
 # Auto-generated dependencies
 REQUIRED_PACKAGES += $(GXX_RUNTIME_PKG)

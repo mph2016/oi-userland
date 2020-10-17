@@ -11,6 +11,7 @@
 #
 # Copyright 2013 Adam Stevko. All rights reserved.
 # Copyright 2016 Alexander Pyhalov
+# Copyright 2018 Michal Nowak
 #
 
 include ../../../make-rules/shared-macros.mk
@@ -18,28 +19,30 @@ include ../../../make-rules/shared-macros.mk
 COMPONENT_NAME=		openindiana-welcome
 COMPONENT_SRC=		$(COMPONENT_NAME)
 COMPONENT_VERSION=	1.0
+COMPONENT_REVISION=	$(shell cd $(COMPONENT_SRC); git rev-list HEAD --count)
 COMPONENT_LICENSE=	GPLv2
 COMPONENT_LICENSE_FILE=	COPYING
-
-COMPONENT_REVISION=$(shell cd $(COMPONENT_SRC); git rev-list HEAD --count)
-
 COMPONENT_SUMMARY=	OpenIndiana Welcome Document
-COMPONENT_FMRI= release/os-welcome
-COMPONENT_CLASSIFICATION= System/Text Tools
+COMPONENT_FMRI=		release/os-welcome
+COMPONENT_CLASSIFICATION=	System/Text Tools
 
 PKG_MACROS+=	GIT_REPO="$(GIT_REPO)"
 
-GIT=git
-GIT_REPO=https://github.com/OpenIndiana/openindiana-welcome
-GIT_BRANCH=master
-GIT_CHANGESET=HEAD
+GIT=		git
+GIT_REPO=	https://github.com/OpenIndiana/openindiana-welcome
+GIT_BRANCH=	master
+GIT_CHANGESET=	HEAD
 
-PATH=/usr/gnu/bin:/usr/bin
+PATH=$(PATH.gnu)
 
 PYTHON_VERSION=3.5
 
+COMPONENT_PREP_GIT=no
 include $(WS_TOP)/make-rules/prep.mk
 include $(WS_TOP)/make-rules/configure.mk
+
+# Make sure the binaries will be in /usr/bin instead of /usr/bin/$(MACH64):
+CONFIGURE_BINDIR.64 = $(CONFIGURE_BINDIR.32)
 
 CONFIGURE_ENV += PYTHON=$(PYTHON)
 
@@ -75,9 +78,9 @@ $(SOURCE_DIR)/.prep: $(SOURCE_DIR)/.downloaded Makefile
 		autoconf -f
 	touch $(SOURCE_DIR)/.prep
 
-build: $(BUILD_32)
+build: $(BUILD_64)
 
-install: $(INSTALL_32)
+install: $(INSTALL_64)
 
 download:: $(SOURCE_DIR)/.downloaded
 

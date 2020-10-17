@@ -33,11 +33,8 @@ PKG_REPO=$(SOURCE_DIR)/packages/$(MACH)/nightly-nd/repo.redist
 
 CLEAN_PATHS += $(BUILD_DIR)
 
+COMPONENT_PREP_GIT=no
 include $(WS_MAKE_RULES)/prep.mk
-
-COMPONENT_ENV = CC=$(CC)
-COMPONENT_BUILD_ENV = $(COMPONENT_ENV)
-COMPONENT_INSTALL_ENV = $(COMPONENT_ENV)
 
 $(SOURCE_DIR)/.downloaded: $(ARCHIVES:%=$(USERLAND_ARCHIVES)%)
 	@[ -d $(SOURCE_DIR) ] || \
@@ -66,6 +63,7 @@ $(BUILD_DIR)/$(MACH)/.built: $(SOURCE_DIR)/.downloaded Makefile
             -e 's|^export GATE=.*|export GATE=\"$$(git log -1 --format=illumos-%h)\"|' \
             -e 's|^export CODEMGR_WS=.*|export CODEMGR_WS=\"$$PWD\"|'; \
           echo export VERIFY_ELFSIGN=n; \
+          echo export LC_ALL=en_US.UTF-8; \
           echo export CW_NO_SHADOW=1; \
           echo export SPRO_ROOT=; \
           echo export ON_CLOSED_BINS=/tmp; \
@@ -113,6 +111,11 @@ $(BUILD_DIR)/$(MACH)/.published: $(BUILD_DIR)/$(MACH)/publish.transforms
 
 publish: update $(BUILD_DIR)/$(MACH)/.published
 
+print-package-names:
+	if test -d $(PKG_REPO); \
+	then pkgrepo list -H -F tsv -s $(PKG_REPO) | cut -f 2 | sort -u > pkg5.fmris; fi; \
+	cat pkg5.fmris
+
 PACKAGE_NAMES  = consolidation/install/install-incorporation
 PACKAGE_NAMES += consolidation/install/install-redistributable
 PACKAGE_NAMES += install/distribution-constructor
@@ -137,3 +140,4 @@ PACKAGE_NAMES += system/library/install
 
 # Build dependencies
 REQUIRED_PACKAGES += system/library/install/libinstzones
+REQUIRED_PACKAGES += system/library/storage/ima/header-ima
